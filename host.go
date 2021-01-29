@@ -11,6 +11,7 @@ type Host struct {
 	hostgroup_id        int
 	hostname            string
 	port                int
+	gtid_port           int
 	status              string
 	weight              int
 	compression         int
@@ -28,6 +29,7 @@ func DefaultHost() *Host {
 		0,        // hostgroup_id
 		"",       // hostname
 		3306,     // port
+		0,        // gtid_port
 		"ONLINE", // status
 		1,        // weight
 		0,        // compression
@@ -149,13 +151,13 @@ func (h *Host) Valid() error {
 }
 
 func (h *Host) values() string {
-	return fmt.Sprintf("(%d, '%s', %d, '%s', %d, %d, %d, %d, %d, %d, '%s')", h.hostgroup_id, h.hostname, h.port, h.status, h.weight, h.compression, h.max_connections, h.max_replication_lag, h.use_ssl, h.max_latency_ms, h.comment)
+	return fmt.Sprintf("(%d, '%s', %d, %d, '%s', %d, %d, %d, %d, %d, %d, '%s')", h.hostgroup_id, h.hostname, h.port, h.gtid_port, h.status, h.weight, h.compression, h.max_connections, h.max_replication_lag, h.use_ssl, h.max_latency_ms, h.comment)
 }
 
 func (h *Host) columns() string {
-	return "(hostgroup_id, hostname, port, status, weight, compression, max_connections, max_replication_lag, use_ssl, max_latency_ms, comment)"
+	return "(hostgroup_id, hostname, port, gtid_port, status, weight, compression, max_connections, max_replication_lag, use_ssl, max_latency_ms, comment)"
 }
 
 func (h *Host) where() string {
-	return fmt.Sprintf("hostgroup_id = %d and hostname = '%s' and port = %d and status = '%s' and weight = %d and compression = %d and max_connections = %d and max_replication_lag = %d and use_ssl = %d and max_latency_ms = %d and comment = '%s'", h.hostgroup_id, h.hostname, h.port, h.status, h.weight, h.compression, h.max_connections, h.max_replication_lag, h.use_ssl, h.max_latency_ms, h.comment)
+	return fmt.Sprintf("hostgroup_id = %d and hostname = '%s' and port = %d and gtid_port = %d and status = '%s' and weight = %d and compression = %d and max_connections = %d and max_replication_lag = %d and use_ssl = %d and max_latency_ms = %d and comment = '%s'", h.hostgroup_id, h.hostname, h.port, h.gtid_port, h.status, h.weight, h.compression, h.max_connections, h.max_replication_lag, h.use_ssl, h.max_latency_ms, h.comment)
 }
