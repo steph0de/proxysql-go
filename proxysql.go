@@ -102,6 +102,17 @@ func (p *ProxySQL) Clear() error {
 	return err
 }
 
+// UpdateWeightForHost removes the host that matches the provided host's
+// configuration exactly. This will propagate error from sql.Exec
+func (p *ProxySQL) UpdateWeightForHost(host *Host, weight int) error {
+	mut.Lock()
+	defer mut.Unlock()
+	// build a query with these options
+	_, err := exec(p, fmt.Sprintf("update mysql_servers set weight=%d where %s", weight, host.where()))
+	host.SetWeight(weight)
+	return err
+}
+
 // RemoveHost removes the host that matches the provided host's
 // configuration exactly. This will propagate error from sql.Exec
 func (p *ProxySQL) RemoveHost(host *Host) error {
