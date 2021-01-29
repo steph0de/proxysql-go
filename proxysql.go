@@ -6,8 +6,9 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql" // driver for interfacing with ProxySQL
 	"sync"
+
+	_ "github.com/go-sql-driver/mysql" // driver for interfacing with ProxySQL
 )
 
 type ProxySQL struct {
@@ -164,6 +165,7 @@ func (p *ProxySQL) HostsLike(opts ...HostOpts) ([]*Host, error) {
 			hostgroup_id        int
 			hostname            string
 			port                int
+			gtid_port           int
 			status              string
 			weight              int
 			compression         int
@@ -173,11 +175,11 @@ func (p *ProxySQL) HostsLike(opts ...HostOpts) ([]*Host, error) {
 			max_latency_ms      int
 			comment             string
 		)
-		err := scanRows(rows, &hostgroup_id, &hostname, &port, &status, &weight, &compression, &max_connections, &max_replication_lag, &use_ssl, &max_latency_ms, &comment)
+		err := scanRows(rows, &hostgroup_id, &hostname, &port, &gtid_port, &status, &weight, &compression, &max_connections, &max_replication_lag, &use_ssl, &max_latency_ms, &comment)
 		if err != nil {
 			return nil, err
 		}
-		host := &Host{hostgroup_id, hostname, port, status, weight, compression, max_connections, max_replication_lag, use_ssl, max_latency_ms, comment}
+		host := &Host{hostgroup_id, hostname, port, gtid_port, status, weight, compression, max_connections, max_replication_lag, use_ssl, max_latency_ms, comment}
 		entries = append(entries, host)
 	}
 	if rowsErr(rows) != nil && rowsErr(rows) != sql.ErrNoRows {
@@ -213,6 +215,7 @@ func (p *ProxySQL) All(opts ...HostOpts) ([]*Host, error) {
 			hostgroup_id        int
 			hostname            string
 			port                int
+			gtid_port           int
 			status              string
 			weight              int
 			compression         int
@@ -222,11 +225,11 @@ func (p *ProxySQL) All(opts ...HostOpts) ([]*Host, error) {
 			max_latency_ms      int
 			comment             string
 		)
-		err := scanRows(rows, &hostgroup_id, &hostname, &port, &status, &weight, &compression, &max_connections, &max_replication_lag, &use_ssl, &max_latency_ms, &comment)
+		err := scanRows(rows, &hostgroup_id, &hostname, &port, &gtid_port, &status, &weight, &compression, &max_connections, &max_replication_lag, &use_ssl, &max_latency_ms, &comment)
 		if err != nil {
 			return nil, err
 		}
-		host := &Host{hostgroup_id, hostname, port, status, weight, compression, max_connections, max_replication_lag, use_ssl, max_latency_ms, comment}
+		host := &Host{hostgroup_id, hostname, port, gtid_port, status, weight, compression, max_connections, max_replication_lag, use_ssl, max_latency_ms, comment}
 		entries = append(entries, host)
 	}
 	if rowsErr(rows) != nil && rowsErr(rows) != sql.ErrNoRows {
