@@ -53,6 +53,11 @@ func (h *Host) SetPort(p int) *Host {
 	return h
 }
 
+func (h *Host) SetGTIDPort(gp int) *Host {
+	h.gtid_port = gp
+	return h
+}
+
 func (h *Host) SetHostgroupID(hg int) *Host {
 	h.hostgroup_id = hg
 	return h
@@ -106,6 +111,10 @@ func (h *Host) Hostname() string {
 
 func (h *Host) Port() int {
 	return h.port
+}
+
+func (h *Host) GTIDPort() int {
+	return h.gtid_port
 }
 
 func (h *Host) HostgroupID() int {
