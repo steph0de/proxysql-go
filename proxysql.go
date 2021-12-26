@@ -113,6 +113,17 @@ func (p *ProxySQL) UpdateWeightForHost(host *Host, weight int) error {
 	return err
 }
 
+// UpdateStatusForHost set the status of the host that matches the hostgroup id, hostname and port
+// This will propagate error from sql.Exec
+func (p *ProxySQL) UpdateStatusForHost(host *Host, status string) error {
+	mut.Lock()
+	defer mut.Unlock()
+	// build a query with these options
+	_, err := exec(p, fmt.Sprintf("update mysql_servers set status='%s' where %s", status, host.where_host()))
+	host.SetStatus(status)
+	return err
+}
+
 // RemoveHost removes the host that matches the provided host's
 // configuration exactly. This will propagate error from sql.Exec
 func (p *ProxySQL) RemoveHost(host *Host) error {

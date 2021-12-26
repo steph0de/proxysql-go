@@ -170,3 +170,7 @@ func (h *Host) columns() string {
 func (h *Host) where() string {
 	return fmt.Sprintf("hostgroup_id = %d and hostname = '%s' and port = %d and gtid_port = %d and status = '%s' and weight = %d and compression = %d and max_connections = %d and max_replication_lag = %d and use_ssl = %d and max_latency_ms = %d and comment = '%s'", h.hostgroup_id, h.hostname, h.port, h.gtid_port, h.status, h.weight, h.compression, h.max_connections, h.max_replication_lag, h.use_ssl, h.max_latency_ms, h.comment)
 }
+
+func (h *Host) where_host() string {
+	return fmt.Sprintf("hostgroup_id = %d and hostname = '%s' and port = %d ", h.hostgroup_id, h.hostname, h.port)
+}
